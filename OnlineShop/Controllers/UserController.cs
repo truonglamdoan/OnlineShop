@@ -11,6 +11,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
+//using OnlineShop.Entities;
+using OnlineShop.Bussiness;
 
 namespace OnlineShop.Controllers
 {
@@ -116,6 +118,10 @@ namespace OnlineShop.Controllers
                     userSession.UserName = user.UserName;
                     userSession.UserID = user.ID;
                     Session.Add(CommonConstants.USER_SESSION, userSession);
+
+
+                    List<OnlineShop.Entities.User> data = new UserBL().LoadDataMaster();
+
                     return Redirect("/");
                 }
                 else if (result == 0)
@@ -134,6 +140,7 @@ namespace OnlineShop.Controllers
                 {
                     ModelState.AddModelError("", "đăng nhập không đúng.");
                 }
+
             }
             return View(model);
         }
@@ -148,8 +155,7 @@ namespace OnlineShop.Controllers
                 {
                     ModelState.AddModelError("", "Tên đăng nhập đã tồn tại");
                 }
-                else if (dao.CheckEmail(model.Email))
-                {
+                else if (dao.CheckEmail(model.Email))                {
                     ModelState.AddModelError("", "Email đã tồn tại");
                 }
                 else
