@@ -13,12 +13,17 @@ using System.Web.Mvc;
 using System.Xml.Linq;
 //using OnlineShop.Entities;
 using OnlineShop.Bussiness;
+using MongoDB.Driver;
+using OnlineShop.Core;
 
 namespace OnlineShop.Controllers
 {
     
     public class UserController : Controller
     {
+        private MongoDbContext dbContext;
+        private IMongoCollection<OnlineShop.Entities.TestModel> testModel;
+
         private Uri RedirectUri
         {
             get
@@ -121,6 +126,14 @@ namespace OnlineShop.Controllers
 
 
                     List<OnlineShop.Entities.User> data = new UserBL().LoadDataMaster();
+
+                    dbContext = new MongoDbContext();
+                    testModel = dbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
+
+                    List<OnlineShop.Entities.TestModel> listTest = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
+
+                    // Get data test mongo
+
 
                     return Redirect("/");
                 }
