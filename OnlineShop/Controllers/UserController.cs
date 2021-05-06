@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using OnlineShop.Bussiness;
 using MongoDB.Driver;
 using OnlineShop.Core;
+using MongoDB.Bson;
 
 namespace OnlineShop.Controllers
 {
@@ -128,7 +129,25 @@ namespace OnlineShop.Controllers
                     List<OnlineShop.Entities.User> data = new UserBL().LoadDataMaster();
 
                     dbContext = new MongoDbContext();
+                    // select
                     testModel = dbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
+                    //// select by Key
+                    //var id = new ObjectId(string.Empty);
+                    //var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().FirstOrDefault(x => x.ID == id);
+                    //// Insert
+                    //Entities.TestModel item = new Entities.TestModel();
+                    //testModel.InsertOne(item);
+                    //// Edit
+                    //// find ==> update
+                    //Entities.TestModel dataItemEdit = testModel.AsQueryable<OnlineShop.Entities.TestModel>().SingleOrDefault(x => x.ID == id);
+                    //var filter = Builders<Entities.TestModel>.Filter.Eq("_id", ObjectId.Parse(string.Empty));
+                    //var update = Builders<Entities.TestModel>.Update
+                    //    .Set("MaLop", dataItemEdit.MaLop)
+                    //    .Set("TenLop", dataItemEdit.TenLop);
+                    //var resultData = testModel.UpdateOne(filter, update);
+                    //// Delete
+                    //testModel.DeleteOne(filter);
+
 
                     List<OnlineShop.Entities.TestModel> listTest = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
 
