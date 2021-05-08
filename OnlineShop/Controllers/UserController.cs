@@ -16,13 +16,18 @@ using OnlineShop.Bussiness;
 using MongoDB.Driver;
 using OnlineShop.Core;
 using MongoDB.Bson;
+using Neo4jClient.Cypher;
+using Neo4jClient;
+using Neo4j.Driver.V1;
+using Newtonsoft.Json;
 
 namespace OnlineShop.Controllers
 {
     
     public class UserController : Controller
     {
-        private MongoDbContext dbContext;
+        private MongoDbContext mongoDbContext;
+        private GraphDbContext graphDbContext;
         private IMongoCollection<OnlineShop.Entities.TestModel> testModel;
 
         private Uri RedirectUri
@@ -128,9 +133,9 @@ namespace OnlineShop.Controllers
 
                     List<OnlineShop.Entities.User> data = new UserBL().LoadDataMaster();
 
-                    dbContext = new MongoDbContext();
+                    mongoDbContext = new MongoDbContext();
                     // select
-                    testModel = dbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
+                    testModel = mongoDbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
                     //// select by Key
                     //var id = new ObjectId(string.Empty);
                     //var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().FirstOrDefault(x => x.ID == id);
@@ -148,6 +153,88 @@ namespace OnlineShop.Controllers
                     //// Delete
                     //testModel.DeleteOne(filter);
 
+                    // For GraphNeo4j
+                    //var query = GraphDbContext.GraphClient.Cypher
+                    //           .Match("(m:Movie)<-[:ACTED_IN]-(a:Person)")
+                    //           .Return((m, a) => new
+                    //           {
+                    //               movie = m.As<Entities.Movie>().title,
+                    //               cast = Return.As<string>("collect(a.name)")
+                    //           })
+                    //           .Limit(100);
+
+                    //var graphClient = new GraphClient(new Uri("http://localhost:7474/db/data"), "TruongLam", "123456");
+                    //graphClient.Connect();
+
+                    //var driver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "neo"));
+                    //var session = driver.Session();
+                    //var tx = session.BeginTransaction();
+                    
+                    
+
+                    var statementText = "MATCH (p:Person) RETURN p";
+                    var users = new List<Entities.User>();
+                    try
+                    {
+                        //using (var session = driver.Session())
+                        //{
+                        //    session.ReadTransaction(tx =>
+                        //    {
+                        //        var resultData = tx.Run(statementText);
+                        //        foreach (var record in resultData)
+                        //        {
+                        //            var nodeProps = JsonConvert.SerializeObject(record[0].As<INode>().Properties);
+                        //            users.Add(JsonConvert.DeserializeObject<Entities.User>(nodeProps));
+                        //        }
+                        //    });
+                        //}
+
+                        //var client = new BoltGraphClient("bolt://localhost:7687", "TruongLam", "123456");
+                        //client.Connect();
+
+                        //var graphClient = new GraphClient(new Uri("http://localhost:7474/db/data"), "TruongLam", "123456");
+                        //graphClient.Connect();
+
+                        graphDbContext = new GraphDbContext();
+
+                        var query = graphDbContext.GraphClient.Cypher
+                                   .Match("(m:Movie)")
+                                   .Return(m => m.As<Entities.Movie>())
+                                   .Limit(100);
+                        //var tomHanks = graphDbContext.GraphClient.Cypher.Match("(person:Person)")
+                        //         .Where((Entities.Person person) => person.name == "Tom Hanks")
+                        //         .Return(person => person.As<Entities.Person>())
+                        //         .Results
+                        //         .Single();
+
+                        ////You can see the cypher query here when debugging
+                        var dataList = query.Results.ToList();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw (ex);
+                    }
+                    
+
+
+                    //client = new BoltGraphClient("bolt://localhost:7687", "TruongLam", "123456");
+                    //client.Connect();
+
+                    //graphDbContext = new GraphDbContext();
+
+                    ////var query = graphDbContext.GraphClient.Cypher
+                    ////           .Match("(m:Movie)")
+                    ////           .Return(m => m.As<Entities.Movie>().title)
+                    ////           .Limit(100);
+                    //var tomHanks = graphDbContext.GraphClient.Cypher.Match("(person:Person)")
+                    //         .Where((Entities.Person person) => person.name == "Tom Hanks")
+                    //         .Return(person => person.As<Entities.Person>())
+                    //         .Results
+                    //         .Single();
+
+                    //You can see the cypher query here when debugging
+                    //var dataList = query.Results.ToList();
 
                     List<OnlineShop.Entities.TestModel> listTest = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
 
