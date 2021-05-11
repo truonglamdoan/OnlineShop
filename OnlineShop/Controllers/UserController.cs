@@ -133,26 +133,39 @@ namespace OnlineShop.Controllers
 
                     List<OnlineShop.Entities.User> data = new UserBL().LoadDataMaster();
 
-                    mongoDbContext = new MongoDbContext();
-                    // select
-                    testModel = mongoDbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
-                    //// select by Key
-                    //var id = new ObjectId(string.Empty);
-                    //var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().FirstOrDefault(x => x.ID == id);
-                    //// Insert
-                    //Entities.TestModel item = new Entities.TestModel();
-                    //testModel.InsertOne(item);
-                    //// Edit
-                    //// find ==> update
-                    //Entities.TestModel dataItemEdit = testModel.AsQueryable<OnlineShop.Entities.TestModel>().SingleOrDefault(x => x.ID == id);
-                    //var filter = Builders<Entities.TestModel>.Filter.Eq("_id", ObjectId.Parse(string.Empty));
-                    //var update = Builders<Entities.TestModel>.Update
-                    //    .Set("MaLop", dataItemEdit.MaLop)
-                    //    .Set("TenLop", dataItemEdit.TenLop);
-                    //var resultData = testModel.UpdateOne(filter, update);
-                    //// Delete
-                    //testModel.DeleteOne(filter);
-                    
+                    // MongoDb
+                    try
+                    {
+
+                        mongoDbContext = new MongoDbContext();
+                        // select
+                        testModel = mongoDbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
+                        // select by Key
+                        //var id = new ObjectId(string.Empty);
+                        //var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().FirstOrDefault(x => x.ID == id);
+                        var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
+
+                        //// Insert
+                        //Entities.TestModel item = new Entities.TestModel();
+                        //testModel.InsertOne(item);
+                        //// Edit
+                        //// find ==> update
+                        //Entities.TestModel dataItemEdit = testModel.AsQueryable<OnlineShop.Entities.TestModel>().SingleOrDefault(x => x.ID == id);
+                        //var filter = Builders<Entities.TestModel>.Filter.Eq("_id", ObjectId.Parse(string.Empty));
+                        //var update = Builders<Entities.TestModel>.Update
+                        //    .Set("MaLop", dataItemEdit.MaLop)
+                        //    .Set("TenLop", dataItemEdit.TenLop);
+                        //var resultData = testModel.UpdateOne(filter, update);
+                        //// Delete
+                        //testModel.DeleteOne(filter);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw (ex);
+                    }
+
+                    // GraphNeo4J
                     try
                     {
                         graphDbContext = new GraphDbContext();
