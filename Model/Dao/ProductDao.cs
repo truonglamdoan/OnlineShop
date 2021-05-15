@@ -110,5 +110,11 @@ namespace Model.Dao
         {
             return db.Products.Find(id);
         }
+
+        public List<Product> ListProducts()
+        {
+            var product = db.Products;
+            return db.Products.ToList();
+        }
     }
 }

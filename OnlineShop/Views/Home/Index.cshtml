@@ -49,9 +49,9 @@
         <div class="heading">
             <h3>Sản phẩm mới</h3>
         </div>
-        <div class="see">
+        @*<div class="see">
             <p><a href="/san-pham">See all Products</a></p>
-        </div>
+        </div>*@
         <div class="clear"></div>
     </div>
     <div class="section group">
@@ -59,7 +59,7 @@
         {
             var url = "/chi-tiet/" + item.MetaTitle + "-" + item.ID;
             <div class="grid_1_of_4 images_1_of_4">
-                <a href="@url"><img src="@item.Image" alt="@item.Name" /></a>
+                <a href="@url"><img src="@item.Image" alt="@item.Name" style=" width: 250px; height: 230px; "/></a>
                 <h2>@item.Name</h2>
                 <div class="price-details">
                     <div class="price-number">
@@ -74,7 +74,7 @@
         }
 
     </div>
-    <div class="content_bottom">
+    @*<div class="content_bottom">
         <div class="heading">
             <h3>Sản phẩm hot</h3>
         </div>
@@ -101,5 +101,5 @@
                 </div>
             </div>
         }
-    </div>
+    </div>*@
 </div>

@@ -1,14 +1,19 @@
-﻿@model Model.EF.Product
+﻿@using OnlineShop.Entities;
+
+@model Model.EF.Product
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var category = (Model.EF.ProductCategory)ViewBag.Category;
     var relatedProducts = (List<Model.EF.Product>)ViewBag.RelatedProducts;
+
+    var movieList = (List<Movie>)ViewBag.listMovie;
+    var personList = (List<Person>)ViewBag.listPerson;
 }
 
 <div class="content">
     <div class="content_top">
-        <div class="back-links">
+        <div class="back-links" style=" width: 100%; ">
             <p><a href="/">Trang chủ</a> >>>> <a href="/san-pham/@category.MetaTitle-@category.ID">@category.Name</a></p>
         </div>
         <div class="clear"></div>
@@ -24,13 +29,13 @@
                                     <a href="#" target="_blank"><img src="@Model.Image" alt=" " /></a>
                                 </div>
                                 @*<ul class="pagination">
-                                    <li><a href="#"><img src="images/thumbnailslide-1.jpg" alt=" " /></a></li>
-                                    <li><a href="#"><img src="images/thumbnailslide-2.jpg" alt=" " /></a></li>
-                                    <li><a href="#"><img src="images/thumbnailslide-3.jpg" alt=" " /></a></li>
-                                    <li><a href="#"><img src="images/thumbnailslide-4.jpg" alt=" " /></a></li>
-                                    <li><a href="#"><img src="images/thumbnailslide-5.jpg" alt=" " /></a></li>
-                                    <li><a href="#"><img src="images/thumbnailslide-6.jpg" alt=" " /></a></li>
-                                </ul>*@
+                                <li><a href="#"><img src="images/thumbnailslide-1.jpg" alt=" " /></a></li>
+                                <li><a href="#"><img src="images/thumbnailslide-2.jpg" alt=" " /></a></li>
+                                <li><a href="#"><img src="images/thumbnailslide-3.jpg" alt=" " /></a></li>
+                                <li><a href="#"><img src="images/thumbnailslide-4.jpg" alt=" " /></a></li>
+                                <li><a href="#"><img src="images/thumbnailslide-5.jpg" alt=" " /></a></li>
+                                <li><a href="#"><img src="images/thumbnailslide-6.jpg" alt=" " /></a></li>
+                            </ul>*@
                             </div>
                         </div>
                     </div>
@@ -86,10 +91,10 @@
             </script>
             <div class="content_bottom">
                 <div class="heading">
-                    <h3>Sản phẩm liên quan</h3>
+                    <h3>Phim liên quan</h3>
                 </div>
                 <div class="see">
-                    <p><a href="/san-pham">Xem tất cả</a></p>
+                    @*<p><a href="/san-pham">Xem tất cả</a></p>*@
                 </div>
                 <div class="clear"></div>
             </div>
@@ -109,10 +114,72 @@
                 }
 
             </div>
+            @*<div class="section group">
+                @foreach (var item in movieList)
+                {
+                    var url = "/chi-tiet/" + item.MetaTitle;
+                    <div class="grid_1_of_4 images_1_of_4">
+                        <a href="@url"><img src="@item.Image" alt=""></a>
+                        <div class="price" style="border:none">
+                            <div class="add-cart" style="float:none">
+                                <h4><a href="@url">Add to Cart</a></h4>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                }
+
+            </div>*@
+
+            <div class="content_bottom">
+                <div class="heading">
+                    <h3>Các diễn viên liên quan</h3>
+                </div>
+                <div class="see">
+                    @*<p><a href="/san-pham">Xem tất cả</a></p>*@
+                </div>
+                <div class="clear"></div>
+            </div>
+            @*<div class="section group">
+            @foreach (var item in relatedProducts)
+            {
+                var url = "/chi-tiet/" + item.MetaTitle + "-" + item.ID;
+                <div class="grid_1_of_4 images_1_of_4">
+                    <a href="@url"><img src="@item.Image" alt=""></a>
+                    <div class="price" style="border:none">
+                        <div class="add-cart" style="float:none">
+                            <h4><a href="@url">Add to Cart</a></h4>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            }
+
+        </div>*@
+            <div class="section group">
+                @foreach (var item in personList)
+                {
+                    var url = "/chi-tiet/" + item.MetaTitle + "-" + item.Id;
+                    <div class="grid_1_of_4 images_1_of_4">
+                        <a href="@url"><img src="@item.Image" alt="" style=" width: 170px; height: 150px; "></a>
+                        <div class="price" style="border:none">
+                            @*<div class="add-cart" style="float:none">
+                                <h4><a href="#">Add to Cart</a></h4>
+                            </div>
+                            <div class="clear"></div>*@
+                            <div class="price-number">
+                                <p style="  font-size: 6px; width: 190px; "><span class="rupees" style=" color: black; ">@item.name</span></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
         </div>
         <div class="rightsidebar span_3_of_1">
             @{ Html.RenderAction("ProductCategory", "Product");}
-            <div class="subscribe">
+            @*<div class="subscribe">
                 <h2>Newsletters Signup</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.......</p>
                 <div class="signup">
@@ -154,7 +221,7 @@
                         </ul>
                     </form>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
 </div>
