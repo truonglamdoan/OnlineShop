@@ -115,7 +115,7 @@ namespace OnlineShop.Controllers
             {
                 if(item.Movie != null)
                 {
-                    string tempId = productList.Find(x => x.Name == item.Movie.title).ID.ToString();
+                    string tempId = productList.Find(x => x.Name.Contains(item.Movie.title)).ID.ToString();
                     string temp = item.Movie.title.Replace(' ', '_');
                     item.Movie.Image = "/assets/client/images/Movie/" + temp + ".jpg";
                     item.Movie.MetaTitle = temp;

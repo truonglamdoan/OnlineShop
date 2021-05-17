@@ -137,13 +137,13 @@ namespace OnlineShop.Controllers
                     try
                     {
 
-                        mongoDbContext = new MongoDbContext();
-                        // select
-                        testModel = mongoDbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
-                        // select by Key
-                        //var id = new ObjectId(string.Empty);
-                        //var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().FirstOrDefault(x => x.ID == id);
-                        var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
+                        //mongoDbContext = new MongoDbContext();
+                        //// select
+                        //testModel = mongoDbContext.database.GetCollection<OnlineShop.Entities.TestModel>("Test1");
+                        //// select by Key
+                        ////var id = new ObjectId(string.Empty);
+                        ////var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().FirstOrDefault(x => x.ID == id);
+                        //var dataItem = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
 
                         //// Insert
                         //Entities.TestModel item = new Entities.TestModel();
@@ -177,6 +177,14 @@ namespace OnlineShop.Controllers
 
                         ////You can see the cypher query here when debugging
                         var dataList = query.Results.ToList();
+
+                        var query1 = graphDbContext.GraphClient.Cypher
+                                   .Match("p=()-[r:ACTED_IN]->()")
+                                   .Return(p => p.As<Entities.Movie>())
+                                   .Limit(100);
+
+                        ////You can see the cypher query here when debugging
+                        var dataList1 = query1.Results.ToList();
 
                     }
                     catch (Exception ex)
