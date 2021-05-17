@@ -10,21 +10,55 @@ using Model.EF;
 using Common;
 using System.Configuration;
 using System.IO;
+using OnlineShop.Core;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using OnlineShop.Common;
 
 namespace OnlineShop.Controllers
 {
     public class CartController : Controller
     {
+        private MongoDbContext mongoDbContext;
+        private IMongoCollection<OnlineShop.Entities.TestModel> testModel;
         private const string CartSession = "CartSession";
         // GET: Cart
         public ActionResult Index()
         {
+            mongoDbContext = new MongoDbContext();
+            IMongoCollection<Product> dataItem = mongoDbContext.database.GetCollection<Product>("Test1");
+            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             var cart = Session[CartSession];
             var list = new List<CartItem>();
-            if (cart != null)
+
+            // Get data từ MongoDb
+
+            //// Find item
+            //var dataItemEdit = dataItem.AsQueryable<Product>().Where(x => x.UserID == user.UserID.ToString());
+            var dataItemEdit = dataItem.AsQueryable<Product>().ToList();
+
+            foreach(var item in dataItemEdit)
             {
-                list = (List<CartItem>)cart;
+                if(item.UserID == user.UserID.ToString())
+                {
+                    CartItem itemCart = new CartItem()
+                    {
+                        Product = item,
+                        Quantity = item.Quantity
+                    };
+                    list.Add(itemCart);
+                }
+                
             }
+            if(list.Count <= 0)
+            {
+                if (cart != null)
+                {
+                    list = (List<CartItem>)cart;
+                }
+            }
+
             return View(list);
         }
 
@@ -49,8 +83,18 @@ namespace OnlineShop.Controllers
         }
         public JsonResult Update(string cartModel)
         {
+            mongoDbContext = new MongoDbContext();
+            IMongoCollection<Product> dataItem = mongoDbContext.database.GetCollection<Product>("Test1");
             var jsonCart = new JavaScriptSerializer().Deserialize<List<CartItem>>(cartModel);
             var sessionCart = (List<CartItem>)Session[CartSession];
+
+            foreach(var item in jsonCart)
+            {
+                var filter = Builders<Product>.Filter.Eq("ID", item.Product.ID);
+                var update = Builders<Product>.Update
+                           .Set("Quantity", item.Quantity);
+                var resultData = dataItem.UpdateOne(filter, update);
+            }
 
             foreach (var item in sessionCart)
             {
@@ -68,7 +112,31 @@ namespace OnlineShop.Controllers
         }
         public ActionResult AddItem(long productId, int quantity)
         {
+            var user = Session[Common.CommonConstants.USER_SESSION];
+            mongoDbContext = new MongoDbContext();
+            IMongoCollection<Product> dataItem = mongoDbContext.database.GetCollection<Product>("Test1");
+
+            // Find item
+            Product dataItemEdit = dataItem.AsQueryable<Product>().SingleOrDefault(x => x.ID == productId);
+
             var product = new ProductDao().ViewDetail(productId);
+
+            if(dataItemEdit != null)
+            {
+                dataItemEdit.UserID = (user == null? "" : ((UserLogin)user).UserID.ToString());
+                var filter = Builders<Product>.Filter.Eq("_id", ObjectId.Parse(dataItemEdit._id.ToString()));
+                var update = Builders<Product>.Update
+                           .Set("Quantity", dataItemEdit.Quantity + 1);
+                var resultData = dataItem.UpdateOne(filter, update);
+            }
+            else
+            {
+                product.UserID = (user == null ? "" : ((UserLogin)user).UserID.ToString());
+                product.Quantity = product.Quantity + 1;
+                // Insert vào mongo
+                dataItem.InsertOne(product);
+            }
+
             var cart = Session[CartSession];
             if (cart != null)
             {
@@ -94,6 +162,8 @@ namespace OnlineShop.Controllers
                 }
                 //Gán vào session
                 Session[CartSession] = list;
+                // Insert vào mongo
+                //dataItem.InsertOne(list);
             }
             else
             {
@@ -105,7 +175,11 @@ namespace OnlineShop.Controllers
                 list.Add(item);
                 //Gán vào session
                 Session[CartSession] = list;
+                //// Insert vào mongo
+                //dataItem.InsertOne(product);
             }
+            
+
             return RedirectToAction("Index");
         }
         [HttpGet]

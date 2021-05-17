@@ -1,5 +1,8 @@
 ﻿using Model.Dao;
+using Model.EF;
+using MongoDB.Driver;
 using OnlineShop.Common;
+using OnlineShop.Core;
 using OnlineShop.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +15,8 @@ namespace OnlineShop.Controllers
 {
     public class HomeController : Controller
     {
+
+        private MongoDbContext mongoDbContext;
         // GET: Home
         public ActionResult Index()
         {
@@ -40,11 +45,39 @@ namespace OnlineShop.Controllers
         [ChildActionOnly]
         public PartialViewResult HeaderCart()
         {
+            mongoDbContext = new MongoDbContext();
+            IMongoCollection<Product> dataItem = mongoDbContext.database.GetCollection<Product>("Test1");
+            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
+
             var cart = Session[CommonConstants.CartSession];
             var list = new List<CartItem>();
-            if (cart != null)
+
+            var dataItemEdit = dataItem.AsQueryable<Product>().ToList();
+            if (user == null)
             {
-                list = (List<CartItem>)cart;
+                if (cart != null)
+                {
+                    list = (List<CartItem>)cart;
+                }
+            }
+            else
+            {
+                foreach (var item in dataItemEdit)
+                {
+                    if (item.UserID == user.UserID.ToString())
+                    {
+                        CartItem itemCart = new CartItem()
+                        {
+                            Product = item,
+                            Quantity = item.Quantity
+                        };
+                        list.Add(itemCart);
+                    }
+
+                }
+
+
+
             }
 
             return PartialView(list);

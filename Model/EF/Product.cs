@@ -1,5 +1,7 @@
 namespace Model.EF
 {
+    using MongoDB.Bson;
+    using MongoDB.Bson.Serialization.Attributes;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -9,6 +11,10 @@ namespace Model.EF
     [Table("Product")]
     public partial class Product
     {
+        [BsonId]
+        public ObjectId _id { set; get; }
+
+        public string UserID { get; set; }
         public long ID { get; set; }
 
         [StringLength(250)]

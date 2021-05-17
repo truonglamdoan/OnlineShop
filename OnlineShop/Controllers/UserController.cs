@@ -158,6 +158,7 @@ namespace OnlineShop.Controllers
                         //var resultData = testModel.UpdateOne(filter, update);
                         //// Delete
                         //testModel.DeleteOne(filter);
+                        //List<OnlineShop.Entities.TestModel> listTest = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
 
                     }
                     catch (Exception ex)
@@ -192,7 +193,6 @@ namespace OnlineShop.Controllers
                         throw (ex);
                     }
 
-                    List<OnlineShop.Entities.TestModel> listTest = testModel.AsQueryable<OnlineShop.Entities.TestModel>().ToList();
 
                     // Get data test mongo
                     return Redirect("/");
