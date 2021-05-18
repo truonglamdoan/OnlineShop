@@ -37,21 +37,24 @@ namespace OnlineShop.Controllers
             //// Find item
             //var dataItemEdit = dataItem.AsQueryable<Product>().Where(x => x.UserID == user.UserID.ToString());
             var dataItemEdit = dataItem.AsQueryable<Product>().ToList();
-
-            foreach(var item in dataItemEdit)
+            if(user != null)
             {
-                if(item.UserID == user.UserID.ToString())
+                foreach (var item in dataItemEdit)
                 {
-                    CartItem itemCart = new CartItem()
+                    if (item.UserID == user.UserID.ToString())
                     {
-                        Product = item,
-                        Quantity = item.Quantity
-                    };
-                    list.Add(itemCart);
+                        CartItem itemCart = new CartItem()
+                        {
+                            Product = item,
+                            Quantity = item.Quantity
+                        };
+                        list.Add(itemCart);
+                    }
+
                 }
-                
             }
-            if(list.Count <= 0)
+
+            if (list.Count <= 0)
             {
                 if (cart != null)
                 {
