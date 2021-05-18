@@ -25,6 +25,7 @@ namespace OnlineShop.Controllers
             //ViewBag.NewProducts = productDao.ListNewProduct(4);
             ViewBag.NewProducts = productDao.ListProducts();
             ViewBag.ListFeatureProducts = productDao.ListFeatureProduct(4);
+
             return View();
         }
 
