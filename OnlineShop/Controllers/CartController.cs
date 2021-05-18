@@ -64,6 +64,13 @@ namespace OnlineShop.Controllers
 
         public JsonResult DeleteAll()
         {
+            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
+            mongoDbContext = new MongoDbContext();
+            IMongoCollection<Product> dataItem = mongoDbContext.database.GetCollection<Product>("Test1");
+
+            var filter = Builders<Product>.Filter.Eq("UserID", user.UserID.ToString());
+            dataItem.DeleteManyAsync(filter);
+
             Session[CartSession] = null;
             return Json(new
             {
@@ -73,6 +80,14 @@ namespace OnlineShop.Controllers
 
         public JsonResult Delete(long id)
         {
+            // Xử lý trong Db Mongo
+            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
+            mongoDbContext = new MongoDbContext();
+            IMongoCollection<Product> dataItem = mongoDbContext.database.GetCollection<Product>("Test1");
+
+            var filter = Builders<Product>.Filter.Eq("ID", id.ToString());
+            dataItem.DeleteOne(filter);
+
             var sessionCart = (List<CartItem>)Session[CartSession];
             sessionCart.RemoveAll(x => x.Product.ID == id);
             Session[CartSession] = sessionCart;
