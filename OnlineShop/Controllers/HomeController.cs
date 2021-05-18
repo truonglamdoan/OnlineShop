@@ -75,9 +75,6 @@ namespace OnlineShop.Controllers
                     }
 
                 }
-
-
-
             }
 
             return PartialView(list);

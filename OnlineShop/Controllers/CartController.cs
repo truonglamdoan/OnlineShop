@@ -127,7 +127,7 @@ namespace OnlineShop.Controllers
         }
         public ActionResult AddItem(long productId, int quantity)
         {
-            var user = Session[Common.CommonConstants.USER_SESSION];
+            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             mongoDbContext = new MongoDbContext();
             IMongoCollection<Product> dataItem = mongoDbContext.database.GetCollection<Product>("Test1");
 
@@ -138,11 +138,22 @@ namespace OnlineShop.Controllers
 
             if(dataItemEdit != null)
             {
-                dataItemEdit.UserID = (user == null? "" : ((UserLogin)user).UserID.ToString());
-                var filter = Builders<Product>.Filter.Eq("_id", ObjectId.Parse(dataItemEdit._id.ToString()));
-                var update = Builders<Product>.Update
-                           .Set("Quantity", dataItemEdit.Quantity + 1);
-                var resultData = dataItem.UpdateOne(filter, update);
+                if(dataItemEdit.UserID == user.UserID.ToString())
+                {
+
+                    dataItemEdit.UserID = (user == null ? "" : user.UserID.ToString());
+                    var filter = Builders<Product>.Filter.Eq("_id", ObjectId.Parse(dataItemEdit._id.ToString()));
+                    var update = Builders<Product>.Update
+                               .Set("Quantity", dataItemEdit.Quantity + 1);
+                    var resultData = dataItem.UpdateOne(filter, update);
+                }
+                else
+                {
+                    product.UserID = (user == null ? "" : ((UserLogin)user).UserID.ToString());
+                    product.Quantity = product.Quantity + 1;
+                    // Insert vào mongo
+                    dataItem.InsertOne(product);
+                }
             }
             else
             {
