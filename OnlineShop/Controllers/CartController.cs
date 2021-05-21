@@ -56,7 +56,7 @@ namespace OnlineShop.Controllers
 
             if (list.Count <= 0)
             {
-                if (cart != null)
+                if (cart != null && user != null && ((List<CartItem>)cart).FirstOrDefault().Product.UserID == user.UserID.ToString())
                 {
                     list = (List<CartItem>)cart;
                 }

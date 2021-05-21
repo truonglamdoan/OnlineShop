@@ -1452,6 +1452,8 @@
     <Content Include="assets\client\images\Person\Werner_Herzog.jpg" />
     <Content Include="assets\client\images\Person\Wil_Wheaton.jpg" />
     <Content Include="assets\client\images\Person\Zach_Grenier.jpg" />
+    <Content Include="assets\client\images\slideimage.jpg" />
+    <Content Include="assets\client\images\slideimage1.jpg" />
     <Content Include="assets\client\js\bootstrap.min.js" />
     <Content Include="assets\client\js\controller\baseController.js" />
     <Content Include="assets\client\js\controller\cartController.js" />
